@@ -1,15 +1,23 @@
 package com.board_api.board.infra
 
-import io.github.oshai.kotlinlogging.KLogger
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Component
 
 
+interface VerificationCodeStore {
+    fun storeVerificationCode(verificationCode: String, fullPhoneNumber: String)
+
+    fun getVerificationCode(fullPhoneNumber: String): String?
+}
+
 @Component
-class VerificationCodeStore(
-    private val logger: KLogger = KotlinLogging.logger {}
-) {
-    fun storeVerificationCode(verificationCode: String, fullPhoneNumber: String) {
-        logger.debug { "storeVerificationCode is not implemented" }
+class TempVerificationCodeStore: VerificationCodeStore {
+    private val store = HashMap<String, String>()
+
+    override fun storeVerificationCode(verificationCode: String, fullPhoneNumber: String) {
+        store[fullPhoneNumber] = verificationCode
+    }
+
+    override fun getVerificationCode(fullPhoneNumber: String): String? {
+        return store[fullPhoneNumber]
     }
 }
